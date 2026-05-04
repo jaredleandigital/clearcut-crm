@@ -1,30 +1,75 @@
 @import "tailwindcss";
 
-/* Light mode - Clearcut brand */
-@theme inline {
-  --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.145 0 0);
-  --color-card: oklch(1 0 0);
-  --color-card-foreground: oklch(0.145 0 0);
-  --color-popover: oklch(1 0 0);
-  --color-popover-foreground: oklch(0.145 0 0);
-  --color-primary: oklch(0.55 0.15 240);
-  --color-primary-foreground: oklch(1 0 0);
-  --color-secondary: oklch(0.96 0.01 240);
-  --color-secondary-foreground: oklch(0.205 0 0);
-  --color-muted: oklch(0.97 0 0);
-  --color-muted-foreground: oklch(0.556 0 0);
-  --color-accent: oklch(0.55 0.15 240);
-  --color-accent-foreground: oklch(1 0 0);
-  --color-destructive: oklch(0.577 0.245 27.325);
-  --color-destructive-foreground: oklch(1 0 0);
-  --color-border: oklch(0.922 0 0);
-  --color-input: oklch(0.922 0 0);
-  --color-ring: oklch(0.55 0.15 240);
-  --color-sidebar: oklch(0.985 0 0);
-  --color-sidebar-foreground: oklch(0.145 0 0);
-  --color-sidebar-border: oklch(0.922 0 0);
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Light mode defaults */
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #007AC3;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.96 0.01 240);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.96 0.01 240);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: #007AC3;
   --radius: 0.625rem;
+}
+
+/* Dark mode overrides */
+.dark {
+  --background: #141314;
+  --foreground: oklch(0.93 0 0);
+  --card: #1c1b1c;
+  --card-foreground: oklch(0.93 0 0);
+  --popover: #1c1b1c;
+  --popover-foreground: oklch(0.93 0 0);
+  --primary: #007AC3;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: #262526;
+  --secondary-foreground: oklch(0.9 0 0);
+  --muted: #262526;
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: #262526;
+  --accent-foreground: oklch(0.9 0 0);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(1 0 0);
+  --border: #333233;
+  --input: #333233;
+  --ring: #007AC3;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius: var(--radius);
   --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
@@ -35,31 +80,5 @@
   }
   body {
     @apply bg-background text-foreground;
-  }
-
-  /* Dark mode */
-  .dark {
-    --color-background: oklch(0.16 0.005 300);
-    --color-foreground: oklch(0.93 0 0);
-    --color-card: oklch(0.2 0.005 300);
-    --color-card-foreground: oklch(0.93 0 0);
-    --color-popover: oklch(0.2 0.005 300);
-    --color-popover-foreground: oklch(0.93 0 0);
-    --color-primary: oklch(0.62 0.16 240);
-    --color-primary-foreground: oklch(1 0 0);
-    --color-secondary: oklch(0.25 0.005 300);
-    --color-secondary-foreground: oklch(0.9 0 0);
-    --color-muted: oklch(0.25 0.005 300);
-    --color-muted-foreground: oklch(0.65 0 0);
-    --color-accent: oklch(0.62 0.16 240);
-    --color-accent-foreground: oklch(1 0 0);
-    --color-destructive: oklch(0.55 0.22 27);
-    --color-destructive-foreground: oklch(1 0 0);
-    --color-border: oklch(0.3 0.005 300);
-    --color-input: oklch(0.3 0.005 300);
-    --color-ring: oklch(0.62 0.16 240);
-    --color-sidebar: oklch(0.14 0.005 300);
-    --color-sidebar-foreground: oklch(0.9 0 0);
-    --color-sidebar-border: oklch(0.25 0.005 300);
   }
 }
