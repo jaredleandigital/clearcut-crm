@@ -2,9 +2,10 @@
 
 import { Doc } from "../../../convex/_generated/dataModel";
 import { Badge } from "@/components/ui/badge";
+import { Phone, Mail } from "lucide-react";
 
 interface LeadCardProps {
-  lead: Doc<"leads">;
+  lead: Doc<"crmLeads">;
   onDragStart: () => void;
   onClick: () => void;
 }
@@ -36,18 +37,25 @@ export function LeadCard({ lead, onDragStart, onClick }: LeadCardProps) {
         </Badge>
       )}
 
-      <div className="mt-2 flex items-center justify-between">
-        {lead.estimatedValue ? (
-          <span className="text-xs font-medium text-green-600">
-            ${lead.estimatedValue.toLocaleString()}
-          </span>
-        ) : (
-          <span />
-        )}
-        {lead.source && (
-          <span className="text-xs text-muted-foreground">{lead.source}</span>
-        )}
-      </div>
+      {lead.phone && (
+        <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Phone className="h-3 w-3 shrink-0" />
+          <span className="truncate">{lead.phone}</span>
+        </div>
+      )}
+
+      {lead.email && (
+        <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <Mail className="h-3 w-3 shrink-0" />
+          <span className="truncate">{lead.email}</span>
+        </div>
+      )}
+
+      {lead.estimatedValue && (
+        <div className="mt-2 text-xs font-medium text-green-600">
+          ${lead.estimatedValue.toLocaleString()}
+        </div>
+      )}
     </div>
   );
 }

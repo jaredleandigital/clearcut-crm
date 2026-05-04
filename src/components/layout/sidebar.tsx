@@ -1,12 +1,13 @@
 "use client";
 
-import { LayoutDashboard, Users } from "lucide-react";
+import { LayoutDashboard, Users, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/leads", label: "Pipeline", icon: LayoutDashboard },
+  { href: "/analytics", label: "Analytics", icon: BarChart3 },
 ];
 
 export function Sidebar() {
