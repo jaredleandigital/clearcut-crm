@@ -1,11 +1,11 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
-import { requireAuth } from "./auth";
+import { requireAuth, checkAuth } from "./auth";
 
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const identity = await checkAuth(ctx);
     if (!identity) return [];
     return await ctx.db.query("leads").order("desc").collect();
   },
@@ -14,7 +14,7 @@ export const list = query({
 export const listByStatus = query({
   args: { status: v.string() },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const identity = await checkAuth(ctx);
     if (!identity) return [];
     return await ctx.db
       .query("leads")
@@ -27,7 +27,7 @@ export const listByStatus = query({
 export const get = query({
   args: { id: v.id("leads") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
+    const identity = await checkAuth(ctx);
     if (!identity) return null;
     return await ctx.db.get(args.id);
   },
@@ -79,7 +79,6 @@ export const update = mutation({
     const existing = await ctx.db.get(id);
     if (!existing) throw new Error("Lead not found");
 
-    // Remove undefined values
     const updates: Record<string, unknown> = { updatedAt: Date.now() };
     for (const [key, value] of Object.entries(fields)) {
       if (value !== undefined) {
