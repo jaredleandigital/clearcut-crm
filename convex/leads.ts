@@ -5,7 +5,8 @@ import { requireAuth } from "./auth";
 export const list = query({
   args: {},
   handler: async (ctx) => {
-    await requireAuth(ctx);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
     return await ctx.db.query("leads").order("desc").collect();
   },
 });
@@ -13,7 +14,8 @@ export const list = query({
 export const listByStatus = query({
   args: { status: v.string() },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
     return await ctx.db
       .query("leads")
       .withIndex("by_status", (q) => q.eq("status", args.status))
@@ -25,7 +27,8 @@ export const listByStatus = query({
 export const get = query({
   args: { id: v.id("leads") },
   handler: async (ctx, args) => {
-    await requireAuth(ctx);
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
     return await ctx.db.get(args.id);
   },
 });
