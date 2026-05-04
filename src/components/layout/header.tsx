@@ -9,6 +9,9 @@ import { useTheme } from "@/hooks/use-theme";
 const pageTitles: Record<string, string> = {
   "/leads": "Leads Pipeline",
   "/analytics": "Analytics",
+  "/follow-ups": "Follow-ups",
+  "/notes": "Notes",
+  "/rules": "CRM Rules",
 };
 
 interface HeaderProps {

@@ -8,11 +8,16 @@
  * @module
  */
 
+import type * as activities from "../activities.js";
 import type * as analytics from "../analytics.js";
 import type * as auth from "../auth.js";
 import type * as debug from "../debug.js";
+import type * as export_ from "../export.js";
+import type * as followUps from "../followUps.js";
 import type * as http from "../http.js";
 import type * as leads from "../leads.js";
+import type * as notes from "../notes.js";
+import type * as pipelineMetrics from "../pipelineMetrics.js";
 import type * as seed from "../seed.js";
 import type * as users from "../users.js";
 
@@ -23,11 +28,16 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  activities: typeof activities;
   analytics: typeof analytics;
   auth: typeof auth;
   debug: typeof debug;
+  export: typeof export_;
+  followUps: typeof followUps;
   http: typeof http;
   leads: typeof leads;
+  notes: typeof notes;
+  pipelineMetrics: typeof pipelineMetrics;
   seed: typeof seed;
   users: typeof users;
 }>;

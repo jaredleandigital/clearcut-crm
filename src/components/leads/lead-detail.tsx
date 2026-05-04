@@ -22,8 +22,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Trash2 } from "lucide-react";
+import { X, Trash2, Plus, Clock, AlertTriangle } from "lucide-react";
 import { DeleteConfirmDialog } from "./delete-confirm-dialog";
+import { ActivityTimeline } from "@/components/activities/activity-timeline";
+import { ActivityForm } from "@/components/activities/activity-form";
+import { FollowUpForm } from "@/components/follow-ups/follow-up-form";
+import { FollowUpList } from "@/components/follow-ups/follow-up-list";
 
 interface LeadDetailProps {
   leadId: Id<"leads">;
@@ -38,6 +42,8 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showActivityForm, setShowActivityForm] = useState(false);
+  const [showFollowUpForm, setShowFollowUpForm] = useState(false);
 
   if (!lead) {
     return null;
@@ -88,8 +94,8 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
       <div className="flex h-full flex-col">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-3">
-          <div className="flex items-center gap-2">
-            <h2 className="font-semibold">{lead.name}</h2>
+          <div className="flex items-center gap-2 min-w-0">
+            <h2 className="font-semibold truncate">{lead.name}</h2>
             <Badge
               style={{
                 backgroundColor: stageConfig?.color + "20",
@@ -99,6 +105,11 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
             >
               {stageConfig?.label}
             </Badge>
+            {lead.isDuplicate && (
+              <Badge variant="destructive" className="text-xs">
+                Duplicate
+              </Badge>
+            )}
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-4 w-4" />
@@ -107,6 +118,21 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-4">
+          {/* Duplicate warning */}
+          {lead.isDuplicate && (
+            <div className="mb-4 flex items-start gap-2 rounded-lg border border-yellow-300 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-950">
+              <AlertTriangle className="h-4 w-4 shrink-0 text-yellow-600 mt-0.5" />
+              <div className="text-sm">
+                <p className="font-medium text-yellow-800 dark:text-yellow-200">
+                  Potential Duplicate
+                </p>
+                <p className="text-yellow-700 dark:text-yellow-300">
+                  This lead may already exist. Check for matching email or phone.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Status selector */}
           <div className="mb-6 space-y-2">
             <Label>Pipeline Stage</Label>
@@ -338,6 +364,44 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
                 </div>
               )}
 
+              {/* Follow-ups */}
+              <div>
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-muted-foreground">
+                    Follow-ups
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 gap-1 text-xs"
+                    onClick={() => setShowFollowUpForm(true)}
+                  >
+                    <Clock className="h-3 w-3" />
+                    Set Reminder
+                  </Button>
+                </div>
+                <FollowUpList leadId={leadId} />
+              </div>
+
+              {/* Activity Timeline */}
+              <div>
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-muted-foreground">
+                    Activity
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 gap-1 text-xs"
+                    onClick={() => setShowActivityForm(true)}
+                  >
+                    <Plus className="h-3 w-3" />
+                    Log Activity
+                  </Button>
+                </div>
+                <ActivityTimeline leadId={leadId} />
+              </div>
+
               {/* Timestamps */}
               <div>
                 <h3 className="mb-2 text-sm font-medium text-muted-foreground">
@@ -383,11 +447,22 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
         </div>
       </div>
 
+      {/* Dialogs */}
       <DeleteConfirmDialog
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
         leadName={lead.name}
         onConfirm={handleDelete}
+      />
+      <ActivityForm
+        leadId={leadId}
+        open={showActivityForm}
+        onOpenChange={setShowActivityForm}
+      />
+      <FollowUpForm
+        leadId={leadId}
+        open={showFollowUpForm}
+        onOpenChange={setShowFollowUpForm}
       />
     </div>
   );

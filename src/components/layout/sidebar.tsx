@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, BarChart3, X } from "lucide-react";
+import { LayoutDashboard, BarChart3, Bell, FileText, BookOpen, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/leads", label: "Pipeline", icon: LayoutDashboard },
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/follow-ups", label: "Follow-ups", icon: Bell },
+  { href: "/notes", label: "Notes", icon: FileText },
+  { href: "/rules", label: "Rules", icon: BookOpen },
 ];
 
 interface SidebarProps {

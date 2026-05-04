@@ -27,8 +27,51 @@ export default defineSchema({
 
     // Lost reason
     lostReason: v.optional(v.string()),
+
+    // Duplicate detection
+    isDuplicate: v.optional(v.boolean()),
+    duplicateOf: v.optional(v.id("leads")),
   })
     .index("by_status", ["status"])
     .index("by_updatedAt", ["updatedAt"])
+    .index("by_createdAt", ["createdAt"])
+    .index("by_email", ["email"])
+    .index("by_phone", ["phone"]),
+
+  activities: defineTable({
+    leadId: v.id("leads"),
+    type: v.string(), // call, email, site_visit, note, status_change, other
+    title: v.string(),
+    description: v.optional(v.string()),
+    metadata: v.optional(v.object({
+      oldStatus: v.optional(v.string()),
+      newStatus: v.optional(v.string()),
+    })),
+    createdAt: v.number(),
+    createdBy: v.optional(v.string()),
+  })
+    .index("by_lead", ["leadId", "createdAt"])
     .index("by_createdAt", ["createdAt"]),
+
+  followUps: defineTable({
+    leadId: v.id("leads"),
+    dueAt: v.number(),
+    note: v.optional(v.string()),
+    completed: v.boolean(),
+    completedAt: v.optional(v.number()),
+    createdAt: v.number(),
+    createdBy: v.optional(v.string()),
+  })
+    .index("by_lead", ["leadId"])
+    .index("by_dueAt", ["dueAt"])
+    .index("by_completed", ["completed", "dueAt"]),
+
+  notes: defineTable({
+    title: v.string(),
+    content: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+    createdBy: v.optional(v.string()),
+  })
+    .index("by_updatedAt", ["updatedAt"]),
 });
