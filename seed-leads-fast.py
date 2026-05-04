@@ -8,6 +8,7 @@ import urllib.request
 import urllib.error
 
 CONVEX_URL = "https://hardy-mongoose-428.convex.cloud"
+# NOTE: Using production URL for hardy-mongoose-428
 
 with open('/tmp/clearcut-leads.json') as f:
     leads = json.load(f)

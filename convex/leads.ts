@@ -116,6 +116,29 @@ export const updateStatus = mutation({
   },
 });
 
+// Called by webhook HTTP action (no user auth, already verified by secret)
+export const createFromWebhook = mutation({
+  args: {
+    name: v.string(),
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    projectType: v.optional(v.string()),
+    projectAddress: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    source: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    return await ctx.db.insert("leads", {
+      ...args,
+      status: "new_lead",
+      createdAt: now,
+      updatedAt: now,
+      statusChangedAt: now,
+    });
+  },
+});
+
 export const remove = mutation({
   args: { id: v.id("leads") },
   handler: async (ctx, args) => {

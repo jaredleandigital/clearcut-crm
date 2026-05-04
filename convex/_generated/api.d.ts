@@ -11,6 +11,7 @@
 import type * as analytics from "../analytics.js";
 import type * as auth from "../auth.js";
 import type * as debug from "../debug.js";
+import type * as http from "../http.js";
 import type * as leads from "../leads.js";
 import type * as seed from "../seed.js";
 import type * as users from "../users.js";
@@ -25,6 +26,7 @@ declare const fullApi: ApiFromModules<{
   analytics: typeof analytics;
   auth: typeof auth;
   debug: typeof debug;
+  http: typeof http;
   leads: typeof leads;
   seed: typeof seed;
   users: typeof users;

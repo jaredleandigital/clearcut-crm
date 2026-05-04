@@ -19,11 +19,19 @@ export function Sidebar() {
       <div className="flex h-14 items-center border-b px-4">
         <Link href="/leads" className="flex items-center">
           <Image
-            src="/logo.png"
+            src="/logo-light.png"
             alt="Clearcut Building Solutions"
             width={180}
             height={40}
-            className="h-8 w-auto dark:brightness-0 dark:invert"
+            className="h-8 w-auto dark:hidden"
+            priority
+          />
+          <Image
+            src="/logo-dark.png"
+            alt="Clearcut Building Solutions"
+            width={180}
+            height={40}
+            className="hidden h-8 w-auto dark:block"
             priority
           />
         </Link>
