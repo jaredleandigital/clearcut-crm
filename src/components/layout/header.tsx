@@ -2,7 +2,7 @@
 
 import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -11,14 +11,28 @@ const pageTitles: Record<string, string> = {
   "/analytics": "Analytics",
 };
 
-export function Header() {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+export function Header({ onMenuClick }: HeaderProps) {
   const pathname = usePathname();
   const title = pageTitles[pathname] || "Clearcut CRM";
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="flex h-14 items-center justify-between border-b bg-background px-6">
-      <h1 className="text-lg font-semibold">{title}</h1>
+    <header className="flex h-14 items-center justify-between border-b bg-background px-4 md:px-6">
+      <div className="flex items-center gap-3">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onMenuClick}
+          className="md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </Button>
+        <h1 className="text-lg font-semibold">{title}</h1>
+      </div>
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" onClick={toggleTheme}>
           {theme === "dark" ? (

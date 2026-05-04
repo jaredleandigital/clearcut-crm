@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { X, Trash2 } from "lucide-react";
+import { DeleteConfirmDialog } from "./delete-confirm-dialog";
 
 interface LeadDetailProps {
   leadId: Id<"leads">;
@@ -36,6 +37,7 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
   const removeLead = useMutation(api.leads.remove);
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   if (!lead) {
     return null;
@@ -76,14 +78,13 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
   }
 
   async function handleDelete() {
-    if (confirm("Delete this lead? This cannot be undone.")) {
-      await removeLead({ id: leadId });
-      onClose();
-    }
+    await removeLead({ id: leadId });
+    setShowDeleteDialog(false);
+    onClose();
   }
 
   return (
-    <div className="fixed inset-y-0 right-0 z-40 w-full max-w-md border-l bg-background shadow-lg">
+    <div className="fixed inset-y-0 right-0 z-40 w-full border-l bg-background shadow-lg md:max-w-md">
       <div className="flex h-full flex-col">
         {/* Header */}
         <div className="flex items-center justify-between border-b px-4 py-3">
@@ -371,7 +372,7 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
                 <Button
                   size="sm"
                   variant="destructive"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteDialog(true)}
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Delete
@@ -381,6 +382,13 @@ export function LeadDetail({ leadId, onClose }: LeadDetailProps) {
           )}
         </div>
       </div>
+
+      <DeleteConfirmDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        leadName={lead.name}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

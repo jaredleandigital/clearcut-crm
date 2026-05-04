@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, BarChart3 } from "lucide-react";
+import { LayoutDashboard, BarChart3, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,13 +11,18 @@ const navItems = [
   { href: "/analytics", label: "Analytics", icon: BarChart3 },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}
+
+export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
   const pathname = usePathname();
 
-  return (
-    <aside className="hidden w-56 flex-col border-r bg-background md:flex">
-      <div className="flex h-14 items-center border-b px-4">
-        <Link href="/leads" className="flex items-center">
+  const navContent = (
+    <>
+      <div className="flex h-14 items-center justify-between border-b px-4">
+        <Link href="/leads" className="flex items-center" onClick={onMobileClose}>
           <Image
             src="/logo-light.png"
             alt="Clearcut Building Solutions"
@@ -35,12 +40,21 @@ export function Sidebar() {
             priority
           />
         </Link>
+        {onMobileClose && (
+          <button
+            onClick={onMobileClose}
+            className="rounded-md p-1 text-muted-foreground hover:bg-accent hover:text-foreground md:hidden"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
       <nav className="flex-1 space-y-1 p-2">
         {navItems.map((item) => (
           <Link
             key={item.href}
             href={item.href}
+            onClick={onMobileClose}
             className={cn(
               "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
               pathname === item.href
@@ -53,6 +67,28 @@ export function Sidebar() {
           </Link>
         ))}
       </nav>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="hidden w-56 flex-col border-r bg-background md:flex">
+        {navContent}
+      </aside>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-40 bg-black/50 md:hidden"
+            onClick={onMobileClose}
+          />
+          <aside className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-background shadow-lg md:hidden">
+            {navContent}
+          </aside>
+        </>
+      )}
+    </>
   );
 }
