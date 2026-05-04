@@ -1,19 +1,17 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import { Doc } from "../../../convex/_generated/dataModel";
 import { Badge } from "@/components/ui/badge";
-import { Phone, Mail, AlertTriangle } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 
 interface LeadCardProps {
   lead: Doc<"leads">;
   onDragStart: () => void;
   onClick: () => void;
+  hasOverdueFollowUp?: boolean;
 }
 
-export function LeadCard({ lead, onDragStart, onClick }: LeadCardProps) {
-  const followUps = useQuery(api.followUps.listByLead, { leadId: lead._id });
+export function LeadCard({ lead, onDragStart, onClick, hasOverdueFollowUp }: LeadCardProps) {
 
   const daysInStage = lead.statusChangedAt
     ? Math.floor((Date.now() - lead.statusChangedAt) / (1000 * 60 * 60 * 24))
@@ -24,11 +22,6 @@ export function LeadCard({ lead, onDragStart, onClick }: LeadCardProps) {
     lead.status === "closed_won" || lead.status === "closed_lost";
   const isStaleWarning = !isClosed && daysInStage >= 7 && daysInStage < 14;
   const isStaleCritical = !isClosed && daysInStage >= 14;
-
-  // Overdue follow-up detection
-  const now = Date.now();
-  const hasOverdueFollowUp =
-    followUps?.some((fu) => !fu.completed && fu.dueAt < now) ?? false;
 
   const borderClass = isStaleCritical
     ? "border-red-400 dark:border-red-600"

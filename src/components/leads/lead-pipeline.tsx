@@ -3,7 +3,7 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { PIPELINE_STAGES, STAGE_CONFIG, PipelineStage } from "@/lib/types";
 import { LeadCard } from "./lead-card";
 import { LeadForm } from "./lead-form";
@@ -14,7 +14,7 @@ import { Plus, Download, AlertTriangle } from "lucide-react";
 
 export function LeadPipeline() {
   const leads = useQuery(api.leads.list);
-  const exportData = useQuery(api.export.exportLeads);
+  const allFollowUps = useQuery(api.followUps.listAll);
   const updateStatus = useMutation(api.leads.updateStatus);
   const [showAddForm, setShowAddForm] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Id<"leads"> | null>(null);
@@ -101,21 +101,43 @@ export function LeadPipeline() {
   }
 
   function handleExportCSV() {
-    if (!exportData || exportData.length === 0) return;
+    if (!leads || leads.length === 0) return;
 
-    const headers = Object.keys(exportData[0]);
+    const headers = [
+      "name", "email", "phone", "status", "projectType", "projectAddress",
+      "projectDescription", "estimatedValue", "source", "assignedTo",
+      "notes", "lostReason", "isDuplicate", "createdAt", "updatedAt", "statusChangedAt",
+    ];
+
+    function escapeCSV(val: string) {
+      if (val.includes(",") || val.includes('"') || val.includes("\n")) {
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+      return val;
+    }
+
     const csvRows = [
       headers.join(","),
-      ...exportData.map((row) =>
-        headers
-          .map((h) => {
-            const val = String((row as Record<string, unknown>)[h] ?? "");
-            // Escape commas and quotes
-            if (val.includes(",") || val.includes('"') || val.includes("\n")) {
-              return `"${val.replace(/"/g, '""')}"`;
-            }
-            return val;
-          })
+      ...leads.map((l) =>
+        [
+          l.name,
+          l.email ?? "",
+          l.phone ?? "",
+          l.status,
+          l.projectType ?? "",
+          l.projectAddress ?? "",
+          l.projectDescription ?? "",
+          l.estimatedValue != null ? String(l.estimatedValue) : "",
+          l.source ?? "",
+          l.assignedTo ?? "",
+          l.notes ?? "",
+          l.lostReason ?? "",
+          l.isDuplicate ? "Yes" : "",
+          new Date(l.createdAt).toISOString(),
+          new Date(l.updatedAt).toISOString(),
+          l.statusChangedAt ? new Date(l.statusChangedAt).toISOString() : "",
+        ]
+          .map(escapeCSV)
           .join(",")
       ),
     ];
@@ -128,6 +150,17 @@ export function LeadPipeline() {
     link.download = `clearcut-leads-${new Date().toISOString().split("T")[0]}.csv`;
     link.click();
     URL.revokeObjectURL(url);
+  }
+
+  // Compute which leads have overdue follow-ups
+  const now = Date.now();
+  const overdueLeadIds = new Set<string>();
+  if (allFollowUps) {
+    for (const fu of allFollowUps) {
+      if (!fu.completed && fu.dueAt < now) {
+        overdueLeadIds.add(fu.leadId);
+      }
+    }
   }
 
   const staleCount = leads.filter((l) => {
@@ -168,7 +201,7 @@ export function LeadPipeline() {
             variant="outline"
             size="sm"
             onClick={handleExportCSV}
-            disabled={!exportData || exportData.length === 0}
+            disabled={!leads || leads.length === 0}
           >
             <Download className="mr-1 h-4 w-4" />
             CSV
@@ -218,6 +251,7 @@ export function LeadPipeline() {
                     lead={lead}
                     onDragStart={() => handleDragStart(lead._id)}
                     onClick={() => setSelectedLead(lead._id)}
+                    hasOverdueFollowUp={overdueLeadIds.has(lead._id)}
                   />
                 ))}
                 {stageLeads.length === 0 && (
