@@ -7,7 +7,7 @@ import time
 import urllib.request
 import urllib.error
 
-CONVEX_URL = "https://terrific-stingray-538.convex.cloud"
+CONVEX_URL = "https://hardy-mongoose-428.convex.cloud"
 
 with open('/tmp/clearcut-leads.json') as f:
     leads = json.load(f)
