@@ -7,7 +7,7 @@ export const leadsPerMonth = query({
     const identity = await checkAuth(ctx);
     if (!identity) return [];
 
-    const leads = await ctx.db.query("crmLeads").order("asc").collect();
+    const leads = await ctx.db.query("leads").order("asc").collect();
 
     const months: Record<string, number> = {};
     for (const lead of leads) {
@@ -28,7 +28,7 @@ export const leadsByService = query({
     const identity = await checkAuth(ctx);
     if (!identity) return [];
 
-    const leads = await ctx.db.query("crmLeads").collect();
+    const leads = await ctx.db.query("leads").collect();
 
     const services: Record<string, number> = {};
     for (const lead of leads) {

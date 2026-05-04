@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Phone, Mail } from "lucide-react";
 
 interface LeadCardProps {
-  lead: Doc<"crmLeads">;
+  lead: Doc<"leads">;
   onDragStart: () => void;
   onClick: () => void;
 }

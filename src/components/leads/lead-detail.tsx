@@ -25,7 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { X, Trash2 } from "lucide-react";
 
 interface LeadDetailProps {
-  leadId: Id<"crmLeads">;
+  leadId: Id<"leads">;
   onClose: () => void;
 }
 

@@ -16,7 +16,7 @@ export const insertLead = mutation({
   handler: async (ctx, args) => {
     // No auth check for seeding
     const { createdAt, ...rest } = args;
-    return await ctx.db.insert("crmLeads", {
+    return await ctx.db.insert("leads", {
       ...rest,
       status: "new_lead",
       createdAt,
@@ -29,7 +29,7 @@ export const insertLead = mutation({
 export const clearAllLeads = mutation({
   args: {},
   handler: async (ctx) => {
-    const leads = await ctx.db.query("crmLeads").collect();
+    const leads = await ctx.db.query("leads").collect();
     for (const lead of leads) {
       await ctx.db.delete(lead._id);
     }

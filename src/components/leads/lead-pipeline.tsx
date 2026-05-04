@@ -15,9 +15,9 @@ export function LeadPipeline() {
   const leads = useQuery(api.leads.list);
   const updateStatus = useMutation(api.leads.updateStatus);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [selectedLead, setSelectedLead] = useState<Id<"crmLeads"> | null>(null);
+  const [selectedLead, setSelectedLead] = useState<Id<"leads"> | null>(null);
   const [dragOverStage, setDragOverStage] = useState<string | null>(null);
-  const draggedLeadRef = useRef<Id<"crmLeads"> | null>(null);
+  const draggedLeadRef = useRef<Id<"leads"> | null>(null);
 
   if (leads === undefined) {
     return (
@@ -35,7 +35,7 @@ export function LeadPipeline() {
     {} as Record<PipelineStage, typeof leads>
   );
 
-  function handleDragStart(leadId: Id<"crmLeads">) {
+  function handleDragStart(leadId: Id<"leads">) {
     draggedLeadRef.current = leadId;
   }
 

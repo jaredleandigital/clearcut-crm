@@ -7,7 +7,7 @@ export const list = query({
   handler: async (ctx) => {
     const identity = await checkAuth(ctx);
     if (!identity) return [];
-    return await ctx.db.query("crmLeads").order("desc").collect();
+    return await ctx.db.query("leads").order("desc").collect();
   },
 });
 
@@ -17,7 +17,7 @@ export const listByStatus = query({
     const identity = await checkAuth(ctx);
     if (!identity) return [];
     return await ctx.db
-      .query("crmLeads")
+      .query("leads")
       .withIndex("by_status", (q) => q.eq("status", args.status))
       .order("desc")
       .collect();
@@ -25,7 +25,7 @@ export const listByStatus = query({
 });
 
 export const get = query({
-  args: { id: v.id("crmLeads") },
+  args: { id: v.id("leads") },
   handler: async (ctx, args) => {
     const identity = await checkAuth(ctx);
     if (!identity) return null;
@@ -48,7 +48,7 @@ export const create = mutation({
   handler: async (ctx, args) => {
     await requireAuth(ctx);
     const now = Date.now();
-    return await ctx.db.insert("crmLeads", {
+    return await ctx.db.insert("leads", {
       ...args,
       status: "new_lead",
       createdAt: now,
@@ -60,7 +60,7 @@ export const create = mutation({
 
 export const update = mutation({
   args: {
-    id: v.id("crmLeads"),
+    id: v.id("leads"),
     name: v.optional(v.string()),
     email: v.optional(v.string()),
     phone: v.optional(v.string()),
@@ -92,7 +92,7 @@ export const update = mutation({
 
 export const updateStatus = mutation({
   args: {
-    id: v.id("crmLeads"),
+    id: v.id("leads"),
     status: v.string(),
     lostReason: v.optional(v.string()),
   },
@@ -117,7 +117,7 @@ export const updateStatus = mutation({
 });
 
 export const remove = mutation({
-  args: { id: v.id("crmLeads") },
+  args: { id: v.id("leads") },
   handler: async (ctx, args) => {
     await requireAuth(ctx);
     await ctx.db.delete(args.id);
