@@ -64,7 +64,7 @@ function AnalyticsContent() {
               </div>
               <div className="flex-1">
                 <div
-                  className="h-8 rounded-md bg-indigo-500 transition-all"
+                  className="h-8 rounded-md bg-[#007AC3] transition-all"
                   style={{
                     width: `${(item.count / maxCount) * 100}%`,
                     minWidth: item.count > 0 ? "2rem" : "0",
@@ -91,7 +91,7 @@ function AnalyticsContent() {
               </div>
               <div className="flex-1">
                 <div
-                  className="h-8 rounded-md bg-teal-500 transition-all"
+                  className="h-8 rounded-md bg-[#007AC3]/80 transition-all"
                   style={{
                     width: `${(item.count / maxServiceCount) * 100}%`,
                     minWidth: item.count > 0 ? "2rem" : "0",
